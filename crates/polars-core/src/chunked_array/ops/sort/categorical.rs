@@ -66,6 +66,9 @@ impl CategoricalChunked {
                 options,
                 self.physical().null_count(),
                 self.len(),
+                false,
+                false,
+                false,
             )
         } else {
             self.physical().arg_sort(options)

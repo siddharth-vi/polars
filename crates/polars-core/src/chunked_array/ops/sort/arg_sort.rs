@@ -161,14 +161,6 @@ where
             (idx, v)
         }));
     }
-
-    // if is_sorted_ascending_flag || is_sorted_descending_flag
-    // {
-    //     sort_impl(vals.as_mut_slice(), options .with_multithreaded(false));
-    // }
-    // else {
-    //     sort_impl(vals.as_mut_slice(), options);
-    // }
     sort_impl(vals.as_mut_slice(), options);
 
     let iter = vals.into_iter().map(|(idx, _v)| idx);

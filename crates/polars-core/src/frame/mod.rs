@@ -2041,11 +2041,16 @@ impl DataFrame {
         // Check if the required column is already sorted; if so we can exit early
         // We can do so when there is only one column to sort by, for multiple columns
         // it will be complicated to do so
+        #[cfg(feature = "dtype-categorical")]
+        let is_not_categorical_enum =
+            !(matches!(by_column[0].dtype(), DataType::Categorical(_, _))
+                || matches!(by_column[0].dtype(), DataType::Enum(_, _)));
 
-        if by_column.len() == 1
-            && !(matches!(by_column[0].dtype(), DataType::Categorical(_, _))
-                || matches!(by_column[0].dtype(), DataType::Enum(_, _)))
-        {
+        #[cfg(not(feature = "dtype-categorical"))]
+        #[allow(non_upper_case_globals)]
+        const is_not_categorical_enum: bool = true;
+
+        if by_column.len() == 1 && is_not_categorical_enum {
             let required_sorting = if sort_options.descending[0] {
                 IsSorted::Descending
             } else {
@@ -2066,6 +2071,7 @@ impl DataFrame {
                 };
             }
         }
+
         #[cfg(feature = "dtype-struct")]
         let has_struct = by_column
             .iter()
